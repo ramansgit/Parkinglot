@@ -15,7 +15,7 @@ public interface TicketManagerInterface {
 	/**
 	 * allows ticket manager to collect  tickets at exitß
 	 */
-	public abstract void collectTikcetsAtExit();
+	public abstract void collectTikcetAtExit();
 	
 	
 	/**

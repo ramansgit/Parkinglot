@@ -12,7 +12,7 @@ public class TiketManagerService implements TicketManagerInterface{
 		
 	}
 
-	public void collectTikcetsAtExit() {
+	public void collectTikcetAtExit() {
 		
 		
 	}
