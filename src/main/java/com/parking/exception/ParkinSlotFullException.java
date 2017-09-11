@@ -4,6 +4,7 @@ public class ParkinSlotFullException  extends Exception{
 
 	private String message;
 	private String code;
+	
 	public String getMessage() {
 		return message;
 	}

@@ -8,8 +8,7 @@ public class VehicleRiderService implements VehicleRiderInterface {
 	}
 
 	public void returnTicketAtExit() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }
