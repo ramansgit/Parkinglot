@@ -1,17 +1,20 @@
 package com.parking.ticket.store;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.parking.exception.ParkinSlotFullException;
-import com.parking.exception.VehicleSearchException;
+import com.parking.config.ParkingSlotConstants;
+import com.parking.exception.ParkingSlotException;
+import com.parking.exception.SearchException;
 import com.parking.model.LevelPojo;
 import com.parking.model.ParkingPojo;
 import com.parking.model.SlotsPojo;
 import com.parking.model.TicketPojo;
 import com.parking.model.VehiclePojo;
+import com.parking.ticket.manager.ParkingManagerService;
 
 /**
  * TicketStore acts as in memory store for managing tickets in the system. This
@@ -27,11 +30,33 @@ public class ParkingStore implements ParkingStoreInterface {
 	 */
 	private static ParkingStore parkingStoreInstance = null;
 
+	/**
+	 * global parking obj which stores the parking setup and gets updated when
+	 * vehicle parked/unparked.
+	 */
 	private static ParkingPojo parkingObj = new ParkingPojo();
 
-	private static Map<Integer, TicketPojo> issuedTickets = new HashMap<Integer, TicketPojo>();
-	private static Map<String, TicketPojo> vehicleCache = new HashMap<String, TicketPojo>();
-	private static Map<String, Map<String, TicketPojo>> colorCache = new HashMap<String, Map<String, TicketPojo>>();
+	/**
+	 * in memory issuedTicketsCache which stores all issued tickets. this is for
+	 * returning the current status of the system. used
+	 * Collections.synchronizedMap to ensure its thread safe. since vehicle will
+	 * be parked/unparked 1 at a time ensuring synchronization for thread
+	 * safety.
+	 */
+	private static Map<Integer, TicketPojo> issuedTicketsCache = Collections
+			.synchronizedMap(new HashMap<Integer, TicketPojo>());
+	/**
+	 * in memory vehicle cache for storing tickets by registration no, this is
+	 * issued for searching by registration no.
+	 */
+	private static Map<String, TicketPojo> registrationCache = Collections
+			.synchronizedMap(new HashMap<String, TicketPojo>());
+
+	/**
+	 * in memory color cache for searching by color. in the system
+	 */
+	private static Map<String, Map<String, TicketPojo>> colorCache = Collections
+			.synchronizedMap(new HashMap<String, Map<String, TicketPojo>>());
 
 	/**
 	 * follows singleton pattern, uses double checking approach to ensure thread
@@ -41,30 +66,43 @@ public class ParkingStore implements ParkingStoreInterface {
 	 */
 	public static ParkingStore getParkingStoreInstance() {
 		if (parkingStoreInstance == null) {
-			parkingStoreInstance = new ParkingStore();
+			synchronized (ParkingManagerService.class) {
+				if (parkingStoreInstance == null) {
+					parkingStoreInstance = new ParkingStore();
+				}
+			}
 		}
 		return parkingStoreInstance;
 	}
 
+	/**
+	 * constructor is private so no one can create object.
+	 */
 	private ParkingStore() {
 
 	}
 
-	public TicketPojo getParkingSlot(VehiclePojo vehicle) throws Exception {
+	/**
+	 * when vehicle arrives at parking mall , checks for available slot and
+	 * returns slot no. if no slot is available throws slotfull exception
+	 */
+	public synchronized TicketPojo getParkingSlot(VehiclePojo vehicle) throws ParkingSlotException, Exception {
 
 		TicketPojo ticketPojo = new TicketPojo();
 
 		int slotNo = 0;
 		if (vehicle == null) {
-			throw new Exception("Invalid vehicle");
+			throw new Exception(ParkingSlotConstants.BAD_REQUEST_MSG);
 		}
 		ParkingPojo parking = getParkingDetails();
 		if (parking == null) {
-			throw new Exception("Invalid Parking Object");
+			throw new ParkingSlotException(ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_CODE,
+					ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_MSG);
 		}
 		List<LevelPojo> levels = parking.getLevels();
 		if (levels == null) {
-			throw new Exception("Invalid Levels Object");
+			throw new ParkingSlotException(ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_CODE,
+					ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_MSG);
 		}
 		for (LevelPojo level : levels) {
 			if (level.getAvailableSlotCount() > 0) {
@@ -82,9 +120,8 @@ public class ParkingStore implements ParkingStoreInterface {
 						ticketPojo.setRegisterationNo(vehicle.getRegisterationNo());
 						ticketPojo.setSlotNo(slotNo);
 						ticketPojo.setLevelNo(level.getLevelNo());
-
 						addToIssuedTickets(ticketPojo);
-						addToVehicleCache(ticketPojo);
+						addToRegistrationCache(ticketPojo);
 						addToColorCache(ticketPojo);
 						return ticketPojo;
 					}
@@ -93,21 +130,29 @@ public class ParkingStore implements ParkingStoreInterface {
 			}
 
 		}
-		throw new ParkinSlotFullException("PARKING_FULL_EXCEPTION", "Parking slots not available");
+		throw new ParkingSlotException(ParkingSlotConstants.PARKING_FULL_EXCEPTION_CODE,
+				ParkingSlotConstants.PARKING_FULL_EXCEPTION_MSG);
 	}
 
-	public boolean updateReturnTicketToStore(TicketPojo returnTicket) throws Exception {
+	/**
+	 * when driver returns the ticket at exit the manager frees the slot from
+	 * the system, so that new vehicle can use it.
+	 */
+	public synchronized boolean updateReturnTicketToStore(TicketPojo returnTicket)
+			throws ParkingSlotException, Exception {
 
 		if (returnTicket == null) {
-			throw new Exception("Invalid returnTicket");
+			throw new Exception(ParkingSlotConstants.BAD_REQUEST_MSG);
 		}
 		ParkingPojo parking = getParkingDetails();
 		if (parking == null) {
-			throw new Exception("Invalid Parking Object");
+			throw new ParkingSlotException(ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_CODE,
+					ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_MSG);
 		}
 		List<LevelPojo> levels = parking.getLevels();
 		if (levels == null) {
-			throw new Exception("Invalid Levels Object");
+			throw new ParkingSlotException(ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_CODE,
+					ParkingSlotConstants.PARKING_SYSTEM_NOT_AVAILABLE_MSG);
 		}
 		for (LevelPojo level : levels) {
 
@@ -121,7 +166,7 @@ public class ParkingStore implements ParkingStoreInterface {
 					slot.setVehicle(null);
 					level.increaseSlotCount();
 					removeFromIssuedTickets(slot.getSlotId());
-					removeFromVehicleCache(returnTicket.getRegisterationNo());
+					removeFromRegistrationCache(returnTicket.getRegisterationNo());
 					removeFromColorCache(returnTicket.getColour(), returnTicket.getRegisterationNo());
 					return true;
 				}
@@ -132,19 +177,27 @@ public class ParkingStore implements ParkingStoreInterface {
 
 	}
 
-	public int findSlotNoByRegistrationNo(String registerationNo) throws VehicleSearchException {
-		TicketPojo ticket = vehicleCache.get(registerationNo);
+	/**
+	 * find slot by registration no.
+	 */
+	public int findSlotNoByRegistrationNo(String registerationNo) throws SearchException {
+		TicketPojo ticket = registrationCache.get(registerationNo);
 		if (ticket != null) {
 			return ticket.getSlotNo();
 		}
-		throw new VehicleSearchException("NO_VEHICLE_FOUND", "Vehicle not found for search key");
+		throw new SearchException(ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_CODE,
+				ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_MSG);
 	}
 
-	public List<String> findAllRegistrationNoByColor(String color) throws VehicleSearchException {
+	/**
+	 * find registration no by color
+	 */
+	public List<String> findAllRegistrationNoByColor(String color) throws SearchException {
 		Map<String, TicketPojo> registrations = colorCache.get(color);
 		List<String> ids = new ArrayList<String>();
 		if (registrations == null) {
-			throw new VehicleSearchException("NO_REGISTRATION_FOUND", "NO Registration found for given color");
+			throw new SearchException(ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_CODE,
+					ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_MSG);
 		}
 		for (String key : registrations.keySet()) {
 			if (registrations.get(key) != null) {
@@ -152,15 +205,20 @@ public class ParkingStore implements ParkingStoreInterface {
 			}
 		}
 		if (ids.isEmpty()) {
-			throw new VehicleSearchException("NO_REGISTRATION_FOUND", "NO Registration found for given color");
+			throw new SearchException(ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_CODE,
+					ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_MSG);
 		}
 		return ids;
 	}
 
-	public List<Integer> findAllSlotNoByColor(String color) throws VehicleSearchException {
+	/**
+	 * this method searches for slot no by color
+	 */
+	public List<Integer> findAllSlotNoByColor(String color) throws SearchException {
 		Map<String, TicketPojo> registrations = colorCache.get(color);
 		if (registrations == null) {
-			throw new VehicleSearchException("NO_SLOTS_FOUND", "NO Slots found for given color");
+			throw new SearchException(ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_CODE,
+					ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_MSG);
 		}
 		List<Integer> ids = new ArrayList<Integer>();
 		for (String key : registrations.keySet()) {
@@ -170,24 +228,31 @@ public class ParkingStore implements ParkingStoreInterface {
 
 		}
 		if (ids.isEmpty()) {
-			throw new VehicleSearchException("NO_SLOTS_FOUND", "NO Slots found for given color");
+			throw new SearchException(ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_CODE,
+					ParkingSlotConstants.SEARCH_DATA_NOT_FOUND_MSG);
 		}
 		return ids;
 	}
 
+	/**
+	 * this method returns all existing issued tickets from system.
+	 */
 	public List<TicketPojo> getParkingStatus() {
 		List<TicketPojo> tickets = new ArrayList<TicketPojo>();
-		for (Integer slot : issuedTickets.keySet()) {
-			tickets.add(issuedTickets.get(slot));
+		for (Integer slot : issuedTicketsCache.keySet()) {
+			tickets.add(issuedTicketsCache.get(slot));
 		}
 		return tickets;
 	}
 
-	public void initalizeParkingSlots(int noOfSlots) {
-
+	/**
+	 * this method is responsible for creating parking object and creates slots
+	 * as per the input.
+	 */
+	public synchronized void setUpMultiStoreyParking(int noOfSlots) {
 		if (noOfSlots > 0 && parkingObj != null) {
 			parkingObj.setParkingName("MultiStoreParkingMall");
-			int max_slots_per_level = 5;
+			int max_slots_per_level = ParkingSlotConstants.MAX_DEFAULT_SLOTS_PER_LEVEL;
 			if (noOfSlots <= max_slots_per_level) {
 				LevelPojo level = new LevelPojo();
 				List<LevelPojo> levels = new ArrayList<LevelPojo>();
@@ -249,27 +314,55 @@ public class ParkingStore implements ParkingStoreInterface {
 
 	}
 
+	/**
+	 * returns parking details
+	 */
 	public ParkingPojo getParkingDetails() {
 
 		return parkingObj;
 	}
 
+	/**
+	 * add data to issued ticket cache
+	 * 
+	 * @param tickets
+	 */
 	private void addToIssuedTickets(TicketPojo tickets) {
-		issuedTickets.put(tickets.getSlotNo(), tickets);
+		issuedTicketsCache.put(tickets.getSlotNo(), tickets);
 	}
 
+	/**
+	 * remove data from issued ticket cache
+	 * 
+	 * @param slotNo
+	 */
 	private void removeFromIssuedTickets(int slotNo) {
-		issuedTickets.remove(slotNo);
+		issuedTicketsCache.remove(slotNo);
 	}
 
-	private void addToVehicleCache(TicketPojo tickets) {
-		vehicleCache.put(tickets.getRegisterationNo(), tickets);
+	/**
+	 * add data to registration cache
+	 * 
+	 * @param tickets
+	 */
+	private void addToRegistrationCache(TicketPojo tickets) {
+		registrationCache.put(tickets.getRegisterationNo(), tickets);
 	}
 
-	private void removeFromVehicleCache(String registrationNo) {
-		vehicleCache.remove(registrationNo);
+	/**
+	 * remove from registration cache
+	 * 
+	 * @param registrationNo
+	 */
+	private void removeFromRegistrationCache(String registrationNo) {
+		registrationCache.remove(registrationNo);
 	}
 
+	/**
+	 * add data to color cache for search
+	 * 
+	 * @param ticket
+	 */
 	private void addToColorCache(TicketPojo ticket) {
 		Map<String, TicketPojo> vehicle = colorCache.get(ticket.getColour());
 		if (vehicle == null) {
@@ -283,7 +376,13 @@ public class ParkingStore implements ParkingStoreInterface {
 
 	}
 
-	private void removeFromColorCache(String color, String registrationNo) {
+	/**
+	 * remove data from color cache.
+	 * 
+	 * @param color
+	 * @param registrationNo
+	 */
+	private synchronized void removeFromColorCache(String color, String registrationNo) {
 		Map<String, TicketPojo> vehicle = colorCache.get(color);
 		if (vehicle != null) {
 			vehicle.remove(registrationNo);

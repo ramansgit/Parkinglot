@@ -2,6 +2,11 @@ package com.parking.model;
 
 import java.util.List;
 
+/**
+ * Carries parking information in the system.
+ * @author ramans
+ *
+ */
 public class ParkingPojo {
 	
 	@Override

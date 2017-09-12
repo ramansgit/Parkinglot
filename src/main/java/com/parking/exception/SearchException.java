@@ -1,8 +1,8 @@
 package com.parking.exception;
 
-public class VehicleSearchException  extends Exception{
+public class SearchException  extends Exception{
 
-	public VehicleSearchException(String code,String message){
+	public SearchException(String code,String message){
 		this.message = message;
 		this.code =code;
 	}

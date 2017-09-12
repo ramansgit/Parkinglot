@@ -2,6 +2,11 @@ package com.parking.model;
 
 import java.util.List;
 
+/**
+ * Level pojo carries no of slots in the level and gives a count of available count.
+ * @author ramans
+ *
+ */
 public class LevelPojo {
 	
 	public int getAvailableSlotCount() {

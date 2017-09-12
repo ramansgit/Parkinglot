@@ -1,8 +1,8 @@
 package com.parking.exception;
 
-public class ParkinSlotFullException  extends Exception{
+public class ParkingSlotException  extends Exception{
 
-	public ParkinSlotFullException(String code,String message){
+	public ParkingSlotException(String code,String message){
 		this.message = message;
 		this.code =code;
 	}

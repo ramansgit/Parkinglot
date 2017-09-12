@@ -1,5 +1,10 @@
 package com.parking.model;
 
+/**
+ * Carries Ticket information in the system.
+ * @author ramans
+ *
+ */
 public class TicketPojo {
 	
 	@Override

@@ -1,5 +1,10 @@
 package com.parking.model;
 
+/**
+ * Carries Vehicle information in the system.
+ * @author ramans
+ *
+ */
 public class VehiclePojo {
 
 	@Override

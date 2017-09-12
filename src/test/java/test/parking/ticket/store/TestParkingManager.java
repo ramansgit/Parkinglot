@@ -1,6 +1,6 @@
 package test.parking.ticket.store;
 
-import com.parking.exception.VehicleSearchException;
+import com.parking.exception.SearchException;
 import com.parking.model.TicketPojo;
 import com.parking.model.VehiclePojo;
 import com.parking.ticket.manager.ParkingManagerInterface;
@@ -15,7 +15,7 @@ public class TestParkingManager {
 		ParkingManagerInterface ticketStore = ParkingManagerService.getParkingManager();
 
 		System.out.println(ticketStore);
-		ticketStore.initailizeParkingSlots(8);
+		ticketStore.setUpMultiStoreyParking(30);
 	}
 
 	public void testIssueTicketAtEntrance() throws Exception {
@@ -62,19 +62,19 @@ public class TestParkingManager {
 
 	}
 
-	public void testFindSlotNoByRegistrationNo(String registrationNo) throws VehicleSearchException {
+	public void testFindSlotNoByRegistrationNo(String registrationNo) throws SearchException {
 		ParkingManagerInterface ticketStore = ParkingManagerService.getParkingManager();
 		System.out.println("Slot No" + ticketStore.findSlotNoByRegistrationNo(registrationNo));
 
 	}
 
-	public void testFindAllRegistrationNoByColor(String color) throws VehicleSearchException {
+	public void testFindAllRegistrationNoByColor(String color) throws SearchException {
 		ParkingManagerInterface ticketStore = ParkingManagerService.getParkingManager();
 		System.out.println("Slot No" + ticketStore.findAllRegistrationNoByColor(color));
 
 	}
 
-	public void testFindAllSlotNosByColor(String color) throws VehicleSearchException {
+	public void testFindAllSlotNosByColor(String color) throws SearchException {
 		ParkingManagerInterface ticketStore = ParkingManagerService.getParkingManager();
 		System.out.println("Slot No" + ticketStore.findAllSlotNoByColor(color));
 

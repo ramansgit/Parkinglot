@@ -1,5 +1,10 @@
 package com.parking.model;
 
+/**
+ * Carries Slot information in the system
+ * @author ramans
+ *
+ */
 public class SlotsPojo {
 
 	@Override
