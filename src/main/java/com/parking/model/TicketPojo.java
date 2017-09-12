@@ -2,7 +2,19 @@ package com.parking.model;
 
 public class TicketPojo {
 	
-	
+	@Override
+	public String toString() {
+		return "TicketPojo [levelNo=" + levelNo + ", slotNo=" + slotNo + ", registerationNo=" + registerationNo
+				+ ", colour=" + colour + "]";
+	}
+	public int getLevelNo() {
+		return levelNo;
+	}
+	public void setLevelNo(int levelNo) {
+		this.levelNo = levelNo;
+	}
+
+	private int levelNo;
 	private int slotNo;
 	private String registerationNo;
 	private String colour;
@@ -25,9 +37,5 @@ public class TicketPojo {
 	public void setColour(String colour) {
 		this.colour = colour;
 	}
-	
-	@Override
-	public String toString() {
-		return "TicketPojo [slotNo=" + slotNo + ", registerationNo=" + registerationNo + ", colour=" + colour + "]";
-	}
+
 }

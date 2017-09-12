@@ -2,6 +2,11 @@ package com.parking.exception;
 
 public class ParkinSlotFullException  extends Exception{
 
+	public ParkinSlotFullException(String code,String message){
+		this.message = message;
+		this.code =code;
+	}
+	
 	private String message;
 	private String code;
 	
@@ -17,6 +22,8 @@ public class ParkinSlotFullException  extends Exception{
 	public void setCode(String code) {
 		this.code = code;
 	}
+	
+	
 	/**
 	 * 
 	 */

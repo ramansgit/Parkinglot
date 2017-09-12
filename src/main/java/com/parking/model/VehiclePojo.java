@@ -1,45 +1,29 @@
 package com.parking.model;
 
 public class VehiclePojo {
-	
-	
-	
+
 	@Override
 	public String toString() {
-		return "VehiclePojo [registerationNo=" + registerationNo + ", colour=" + colour + ", driveName=" + driveName
-				+ ", mobileNo=" + mobileNo + "]";
+		return "VehiclePojo [registrationNo=" + registrationNo + ", colour=" + colour + "]";
 	}
-	
-	private String registerationNo;
+
+	private String registrationNo;
 	private String colour;
-	private String driveName;
-	private String mobileNo;
-	
-	
+
 	public String getRegisterationNo() {
-		return registerationNo;
+		return registrationNo;
 	}
-	public void setRegisterationNo(String registerationNo) {
-		this.registerationNo = registerationNo;
+
+	public void setRegisterationNo(String registrationNo) {
+		this.registrationNo = registrationNo;
 	}
+
 	public String getColour() {
 		return colour;
 	}
+
 	public void setColour(String colour) {
 		this.colour = colour;
 	}
-	public String getDriveName() {
-		return driveName;
-	}
-	public void setDriveName(String driveName) {
-		this.driveName = driveName;
-	}
-	public String getMobileNo() {
-		return mobileNo;
-	}
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
-	
-	
+
 }

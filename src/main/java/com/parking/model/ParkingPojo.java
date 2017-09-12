@@ -6,18 +6,12 @@ public class ParkingPojo {
 	
 	@Override
 	public String toString() {
-		return "ParkingPojo [parkingId=" + parkingId + ", parkingName=" + parkingName + ", levels=" + levels + "]";
+		return "ParkingPojo [ parkingName=" + parkingName + ", levels=" + levels + "]";
 	}
-	private int parkingId;
 	private String parkingName;
 	private List<LevelPojo> levels;
 
-	public int getParkingId() {
-		return parkingId;
-	}
-	public void setParkingId(int parkingId) {
-		this.parkingId = parkingId;
-	}
+	
 	public String getParkingName() {
 		return parkingName;
 	}

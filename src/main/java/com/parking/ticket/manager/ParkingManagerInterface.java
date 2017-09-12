@@ -14,17 +14,17 @@ import com.parking.model.VehiclePojo;
  * @author ramans
  *
  */
-public interface TicketManagerInterface {
+public interface ParkingManagerInterface {
 
 	/**
 	 * allows ticket manager to add parking slots
 	 */
-	public abstract void addParkingSlots(ParkingPojo parking);
+	public abstract void initailizeParkingSlots(int noOfSlots);
 
 	/**
 	 * allows ticket manager to issue parking ticket at entry
 	 */
-	public abstract TicketPojo issueParkingTiketAtEntrance(VehiclePojo vehicleß);
+	public abstract TicketPojo issueParkingTiketAtEntrance(VehiclePojo vehicleß) throws Exception;
 
 	/**
 	 * allows ticket manager to collect parking ticket at exit
@@ -46,4 +46,6 @@ public interface TicketManagerInterface {
 	 */
 	public abstract List<Integer> findAllSlotNoByColor(String color);
 
+	
+	public ParkingPojo getParkingObj();
 }
