@@ -1,11 +1,9 @@
 package com.parking.ticket.manager;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.parking.model.LevelPojo;
+import com.parking.exception.VehicleSearchException;
 import com.parking.model.ParkingPojo;
-import com.parking.model.SlotsPojo;
 import com.parking.model.TicketPojo;
 import com.parking.model.VehiclePojo;
 import com.parking.ticket.store.ParkingStore;
@@ -20,7 +18,7 @@ import com.parking.ticket.store.ParkingStore;
  */
 public class ParkingManagerService implements ParkingManagerInterface {
 
-	private static ParkingManagerService ticketManagerInstance;
+	private static ParkingManagerService parkingManagerInstance;
 
 	/**
 	 * follows singleton pattern, uses double checking approach to ensure thread
@@ -28,13 +26,11 @@ public class ParkingManagerService implements ParkingManagerInterface {
 	 * 
 	 * @return
 	 */
-	public static ParkingManagerService getTicketManagerInstance() {
-		if (ticketManagerInstance == null) {
-			// synchronized (ticketManagerInstance) {
-			ticketManagerInstance = new ParkingManagerService();
-			// }
+	public static ParkingManagerService getParkingManager() {
+		if (parkingManagerInstance == null) {
+			parkingManagerInstance = new ParkingManagerService();
 		}
-		return ticketManagerInstance;
+		return parkingManagerInstance;
 	}
 
 	/**
@@ -48,73 +44,7 @@ public class ParkingManagerService implements ParkingManagerInterface {
 	 * allows ticket manager to add parking slot in the system
 	 */
 	public void initailizeParkingSlots(int noOfSlots) {
-		ParkingPojo parkingObj = new ParkingPojo();
-
-		if (noOfSlots > 0) {
-			parkingObj.setParkingName("MultiStoreParkingMall");
-			int max_slots_per_level = 5;
-			if (noOfSlots <= max_slots_per_level) {
-				LevelPojo level = new LevelPojo();
-				List<LevelPojo> levels = new ArrayList<LevelPojo>();
-				List<SlotsPojo> slots = new ArrayList<SlotsPojo>();
-				level.setLevelNo(0);
-				for (int slotIndex = 1; slotIndex <= noOfSlots; slotIndex++) {
-					SlotsPojo slot = new SlotsPojo();
-					slot.setSlotId(slotIndex);
-					slot.setAvailabilty(true);
-					slots.add(slot);
-
-				}
-				level.setSlots(slots);
-				level.setAvailableSlotCount(noOfSlots);
-				levels.add(level);
-				parkingObj.setLevels(levels);
-			} else {
-				int noOfLevels = noOfSlots / max_slots_per_level;
-				System.out.println(noOfLevels);
-				List<LevelPojo> levels = new ArrayList<LevelPojo>();
-				int slotIndex = 1;
-
-				for (int levelIndex = 0; levelIndex <= noOfLevels; levelIndex++) {
-					int limit = 0;
-					if (noOfSlots > slotIndex) {
-						limit = noOfSlots - slotIndex;
-					} else {
-						limit = slotIndex - noOfSlots;
-					}
-					int boundry = 0;
-					if (limit > max_slots_per_level) {
-						boundry = max_slots_per_level;
-					} else {
-						boundry = limit + 1;
-					}
-					LevelPojo level = new LevelPojo();
-
-					List<SlotsPojo> slots = new ArrayList<SlotsPojo>();
-					level.setLevelNo(levelIndex);
-					level.setAvailableSlotCount(boundry);
-					while (boundry >= 1) {
-						boundry--;
-						SlotsPojo slot = new SlotsPojo();
-						slot.setSlotId(slotIndex);
-						slot.setAvailabilty(true);
-						slots.add(slot);
-						slotIndex++;
-					}
-
-					level.setSlots(slots);
-					levels.add(level);
-				}
-
-				parkingObj.setLevels(levels);
-			}
-
-			System.out.println("Parking Obj" + parkingObj);
-
-			ParkingStore.getTicketStoreInstance().addParkingSlots(parkingObj);
-
-		}
-
+		ParkingStore.getParkingStoreInstance().initalizeParkingSlots(noOfSlots);
 	}
 
 	/**
@@ -123,43 +53,49 @@ public class ParkingManagerService implements ParkingManagerInterface {
 	 * @throws Exception
 	 */
 	public TicketPojo issueParkingTiketAtEntrance(VehiclePojo vehicle) throws Exception {
-		return ParkingStore.getTicketStoreInstance().getParkingSlot(vehicle);
+		return ParkingStore.getParkingStoreInstance().getParkingSlot(vehicle);
 
 	}
 
 	/**
 	 * collects parking ticket when vehicle leaves the parking area
+	 * 
+	 * @throws Exception
 	 */
-
-	public void collectParkingTicketAtExit(TicketPojo returnTicket) {
-
+	public boolean collectParkingTicketAtExit(TicketPojo returnTicket) throws Exception {
+		return ParkingStore.getParkingStoreInstance().updateReturnTicketToStore(returnTicket);
 	}
 
 	/**
 	 * find slot no by registration no
 	 */
-	public String findSlotNoByRegistrationNo(String registerationNo) {
+	public int findSlotNoByRegistrationNo(String registrationNo) throws VehicleSearchException {
 
-		return null;
+		return ParkingStore.getParkingStoreInstance().findSlotNoByRegistrationNo(registrationNo);
 	}
 
 	/**
 	 * find all registration no by color
 	 */
-	public List<String> findAllRegistrationNoByColor(String color) {
+	public List<String> findAllRegistrationNoByColor(String color) throws VehicleSearchException {
 
-		return null;
+		return ParkingStore.getParkingStoreInstance().findAllRegistrationNoByColor(color);
 	}
 
 	/**
 	 * find all slot no by color
 	 */
-	public List<Integer> findAllSlotNoByColor(String color) {
+	public List<Integer> findAllSlotNoByColor(String color) throws VehicleSearchException {
 
-		return null;
+		return ParkingStore.getParkingStoreInstance().findAllSlotNoByColor(color);
 	}
 
-	public ParkingPojo getParkingObj() {
-		return ParkingStore.getTicketStoreInstance().getParkingObj();
+	public ParkingPojo getParkingDetails() {
+		return ParkingStore.getParkingStoreInstance().getParkingDetails();
+	}
+
+	public List<TicketPojo> getParkingStatus() {
+
+		return ParkingStore.getParkingStoreInstance().getParkingStatus();
 	}
 }

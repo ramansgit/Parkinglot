@@ -5,7 +5,7 @@ import com.parking.model.VehiclePojo;
 
 public interface VehicleRiderInterface {
 
-	public abstract TicketPojo parkVehicle(VehiclePojo pojo);
+	public abstract TicketPojo parkVehicle(VehiclePojo pojo) throws Exception;
 
-	public abstract void takeVehicle(TicketPojo pojo);
+	public abstract void takeVehicle(TicketPojo pojo) throws Exception;
 }
