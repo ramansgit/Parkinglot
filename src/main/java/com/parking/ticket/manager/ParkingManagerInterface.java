@@ -59,4 +59,8 @@ public interface ParkingManagerInterface {
 	 * @return
 	 */
 	public abstract List<TicketPojo> getParkingStatus();
+	
+	public abstract TicketPojo getTicketInfoBySlot(int slotId);
+	
+	
 }

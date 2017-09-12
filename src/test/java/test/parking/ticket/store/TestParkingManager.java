@@ -13,7 +13,6 @@ public class TestParkingManager {
 	public void testAddSlots() {
 
 		ParkingManagerInterface ticketStore = ParkingManagerService.getParkingManager();
-
 		System.out.println(ticketStore);
 		ticketStore.setUpMultiStoreyParking(30);
 	}
@@ -108,7 +107,7 @@ public class TestParkingManager {
 	
 	public void testUnParkVehicle(TicketPojo t3) throws Exception {
 		VehicleRiderInterface vehicleRider = new VehicleRiderService();
-		vehicleRider.takeVehicle(t3);
+		vehicleRider.unParkVehicle(t3);
 	}
 
 	public static void main(String[] args) throws Exception {

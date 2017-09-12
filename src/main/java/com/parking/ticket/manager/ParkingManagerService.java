@@ -112,4 +112,8 @@ public class ParkingManagerService implements ParkingManagerInterface {
 		return ParkingStore.getParkingStoreInstance().getParkingStatus();
 	}
 
+	public TicketPojo getTicketInfoBySlot(int slotId) {
+		return ParkingStore.getParkingStoreInstance().getTicketInfoBySlot(slotId);
+	}
+
 }

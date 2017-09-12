@@ -271,7 +271,7 @@ public class ParkingStore implements ParkingStoreInterface {
 				parkingObj.setLevels(levels);
 			} else {
 				int noOfLevels = noOfSlots / max_slots_per_level;
-				System.out.println(noOfLevels);
+				//System.out.println(noOfLevels);
 				List<LevelPojo> levels = new ArrayList<LevelPojo>();
 				int slotIndex = 1;
 
@@ -309,7 +309,7 @@ public class ParkingStore implements ParkingStoreInterface {
 				parkingObj.setLevels(levels);
 			}
 
-			System.out.println("Parking Obj" + parkingObj);
+			//System.out.println("Parking Obj" + parkingObj);
 		}
 
 	}
@@ -389,4 +389,7 @@ public class ParkingStore implements ParkingStoreInterface {
 		}
 	}
 
+	public TicketPojo getTicketInfoBySlot(int slotId) {
+		return issuedTicketsCache.get(slotId);
+	}
 }

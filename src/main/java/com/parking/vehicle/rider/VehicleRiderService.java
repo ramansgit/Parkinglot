@@ -5,6 +5,11 @@ import com.parking.model.VehiclePojo;
 import com.parking.ticket.manager.ParkingManagerInterface;
 import com.parking.ticket.manager.ParkingManagerService;
 
+/**
+ * Vehicle Rider Service allows the driver to park on the given slot and unPark from the parked place.
+ * @author ramans
+ *
+ */
 public class VehicleRiderService implements VehicleRiderInterface {
 
 	/**
@@ -19,7 +24,7 @@ public class VehicleRiderService implements VehicleRiderInterface {
 	/**
 	 * allows driver to take the vehicle from the parking area,making it thread safe to handle concurrency in the system. also in real time only one vehicle can come out atime.
 	 */
-	public synchronized void takeVehicle(TicketPojo pojo) throws Exception {
+	public synchronized void unParkVehicle(TicketPojo pojo) throws Exception {
 
 		ParkingManagerInterface parkingManager = ParkingManagerService.getParkingManager();
 		parkingManager.collectParkingTicketAtExit(pojo);
