@@ -3,7 +3,10 @@ package com.parking.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.plaf.metal.MetalBorders.TableHeaderBorder;
 
 import com.parking.exception.SearchException;
 import com.parking.model.TicketPojo;
@@ -17,6 +20,7 @@ public class ParkingSlotUtil {
 
 	/**
 	 * execute instructions passed from file.
+	 * 
 	 * @param fileName
 	 */
 	public static void executeFileInputs(String fileName) {
@@ -47,6 +51,7 @@ public class ParkingSlotUtil {
 
 	/**
 	 * execute instruction
+	 * 
 	 * @param inputString
 	 * @throws Exception
 	 */
@@ -83,18 +88,42 @@ public class ParkingSlotUtil {
 			}
 
 		} else if (inputString.startsWith("status")) {
-			System.out.println(parkingManger.getParkingStatus());
+			List<TicketPojo> tickets = parkingManger.getParkingStatus();
+
+			System.out.println(String.format("%2s %15s %8s", "Slot No", "Registration No", "Colour"));
+			for (int row = 0; row < tickets.size(); row++) {
+
+				System.out.println(String.format("%2s %19s %8s", tickets.get(row).getSlotNo(),
+						tickets.get(row).getRegisterationNo(), tickets.get(row).getColour()));
+			}
 
 		} else if (inputString.startsWith("registration_numbers_for_cars_with_colour")) {
 			try {
-				System.out.println(parkingManger.findAllRegistrationNoByColor(split[1]));
+				List<String> registrations = parkingManger.findAllRegistrationNoByColor(split[1]);
+				StringBuffer builder = new StringBuffer();
+				for (String registration : registrations) {
+					builder.append(registration).append(",");
+
+				}
+				builder.deleteCharAt(builder.length() - 1);
+				System.out.println(builder);
+
 			} catch (SearchException e) {
 				System.out.println("Not found");
 			}
 
 		} else if (inputString.startsWith("slot_numbers_for_cars_with_colour")) {
 			try {
-				System.out.println(parkingManger.findAllSlotNoByColor(split[1]));
+
+				List<Integer> slotNos = parkingManger.findAllSlotNoByColor(split[1]);
+				StringBuffer builder = new StringBuffer();
+				for (Integer slotNo : slotNos) {
+					builder.append(slotNo).append(",");
+
+				}
+				builder.deleteCharAt(builder.length() - 1);
+				System.out.println(builder);
+
 			} catch (SearchException e) {
 				System.out.println("Not found");
 			}
