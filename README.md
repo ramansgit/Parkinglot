@@ -10,12 +10,9 @@ Test enviornment - linux
 
 
 1. place the Parkinglot.tar bundle in some linux enviornment.
-2. untar the bundle -  tar -xvf Parkinglot.tar
+2. untar the bundle :  tar -xvf Parkinglot.tar
 3. cd Parkinglot 
-4. Maven Build - mvn clean and mvn build
-5. move to target folder : cd target
-
-6. Testing via file input : ./parking_lot.sh file_inputs.txt 
+4. Testing via file input : ./parking_lot.sh file_inputs.txt 
 
 	Created a parking lot with 6 slots
 	Allocated slot number: 1
