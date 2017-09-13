@@ -1,5 +1,10 @@
 package com.parking.exception;
 
+/**
+ * throws parking slot exception
+ * @author ramans
+ *
+ */
 public class ParkingSlotException  extends Exception{
 
 	public ParkingSlotException(String code,String message){

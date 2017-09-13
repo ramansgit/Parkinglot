@@ -1,5 +1,10 @@
 package com.parking.exception;
 
+/**
+ * throws search exception
+ * @author ramans
+ *
+ */
 public class SearchException  extends Exception{
 
 	public SearchException(String code,String message){
