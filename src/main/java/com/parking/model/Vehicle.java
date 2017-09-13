@@ -5,7 +5,7 @@ package com.parking.model;
  * @author ramans
  *
  */
-public class VehiclePojo {
+public class Vehicle {
 
 	@Override
 	public String toString() {

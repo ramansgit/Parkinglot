@@ -5,7 +5,7 @@ package com.parking.model;
  * @author ramans
  *
  */
-public class SlotsPojo {
+public class ParkingSlot {
 
 	@Override
 	public String toString() {
@@ -22,7 +22,7 @@ public class SlotsPojo {
 
 	private int slotId;
 	private boolean availabilty;
-	private VehiclePojo vehicle;
+	private Vehicle vehicle;
 
 	public int getSlotId() {
 		return slotId;
@@ -32,11 +32,11 @@ public class SlotsPojo {
 		this.slotId = slotId;
 	}
 
-	public VehiclePojo getVehicle() {
+	public Vehicle getVehicle() {
 		return vehicle;
 	}
 
-	public void setVehicle(VehiclePojo vehicle) {
+	public void setVehicle(Vehicle vehicle) {
 		this.vehicle = vehicle;
 	}
 }

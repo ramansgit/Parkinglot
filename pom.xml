@@ -3,4 +3,13 @@
   <groupId>Parkinglot</groupId>
   <artifactId>Parkinglot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+  
+  	<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8.7</version>
+			<scope>test</scope>
+		</dependency>
+  </dependencies>
 </project>

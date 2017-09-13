@@ -1,7 +1,7 @@
 package com.parking.vehicle.rider;
 
-import com.parking.model.TicketPojo;
-import com.parking.model.VehiclePojo;
+import com.parking.model.ParkingTicket;
+import com.parking.model.Vehicle;
 
 /**
  * Vechcle driver will be interacting with the system through this interface
@@ -16,12 +16,12 @@ public interface VehicleRiderInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract TicketPojo parkVehicle(VehiclePojo pojo) throws Exception;
+	public abstract ParkingTicket parkVehicle(Vehicle pojo) throws Exception;
 
 	/**
 	 * un park vehicle
 	 * @param pojo
 	 * @throws Exception
 	 */
-	public abstract void unParkVehicle(TicketPojo pojo) throws Exception;
+	public abstract void unParkVehicle(ParkingTicket pojo) throws Exception;
 }

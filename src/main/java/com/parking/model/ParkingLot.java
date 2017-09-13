@@ -7,14 +7,14 @@ import java.util.List;
  * @author ramans
  *
  */
-public class ParkingPojo {
+public class ParkingLot {
 	
 	@Override
 	public String toString() {
 		return "ParkingPojo [ parkingName=" + parkingName + ", levels=" + levels + "]";
 	}
 	private String parkingName;
-	private List<LevelPojo> levels;
+	private List<ParkingLevel> levels;
 
 	
 	public String getParkingName() {
@@ -23,10 +23,10 @@ public class ParkingPojo {
 	public void setParkingName(String parkingName) {
 		this.parkingName = parkingName;
 	}
-	public List<LevelPojo> getLevels() {
+	public List<ParkingLevel> getLevels() {
 		return levels;
 	}
-	public void setLevels(List<LevelPojo> levels) {
+	public void setLevels(List<ParkingLevel> levels) {
 		this.levels = levels;
 	}
 	

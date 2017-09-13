@@ -6,11 +6,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.plaf.metal.MetalBorders.TableHeaderBorder;
-
 import com.parking.exception.SearchException;
-import com.parking.model.TicketPojo;
-import com.parking.model.VehiclePojo;
+import com.parking.model.ParkingTicket;
+import com.parking.model.Vehicle;
 import com.parking.ticket.manager.ParkingManagerInterface;
 import com.parking.ticket.manager.ParkingManagerService;
 import com.parking.vehicle.rider.VehicleRiderInterface;
@@ -67,18 +65,18 @@ public class ParkingSlotUtil {
 			System.out.println("Created a parking lot with " + split[1] + " slots ");
 
 		} else if (inputString.startsWith("park")) {
-			VehiclePojo vehicle = new VehiclePojo();
+			Vehicle vehicle = new Vehicle();
 			vehicle.setColour(split[2]);
 			vehicle.setRegisterationNo(split[1]);
 			try {
-				TicketPojo ticket = riderService.parkVehicle(vehicle);
+				ParkingTicket ticket = riderService.parkVehicle(vehicle);
 				System.out.println("Allocated slot number: " + ticket.getSlotNo());
 			} catch (Exception e) {
 				System.out.println("Sorry, parking lot is full ");
 			}
 
 		} else if (inputString.startsWith("leave")) {
-			TicketPojo ticket = parkingManger.getTicketInfoBySlot(Integer.parseInt(split[1]));
+			ParkingTicket ticket = parkingManger.getTicketInfoBySlot(Integer.parseInt(split[1]));
 			try {
 				if (ticket != null) {
 					riderService.unParkVehicle(ticket);
@@ -88,7 +86,7 @@ public class ParkingSlotUtil {
 			}
 
 		} else if (inputString.startsWith("status")) {
-			List<TicketPojo> tickets = parkingManger.getParkingStatus();
+			List<ParkingTicket> tickets = parkingManger.getParkingStatus();
 
 			System.out.println(String.format("%2s %15s %8s", "Slot No", "Registration No", "Colour"));
 			for (int row = 0; row < tickets.size(); row++) {

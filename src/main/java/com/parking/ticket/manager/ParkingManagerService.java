@@ -3,9 +3,9 @@ package com.parking.ticket.manager;
 import java.util.List;
 
 import com.parking.exception.SearchException;
-import com.parking.model.ParkingPojo;
-import com.parking.model.TicketPojo;
-import com.parking.model.VehiclePojo;
+import com.parking.model.ParkingLot;
+import com.parking.model.ParkingTicket;
+import com.parking.model.Vehicle;
 import com.parking.ticket.store.ParkingStore;
 
 /**
@@ -45,31 +45,28 @@ public class ParkingManagerService implements ParkingManagerInterface {
 	}
 
 	/**
-	 * allows ticket manager to add parking slot in the system,making it thread
-	 * safe to handle concurrency
+	 * allows ticket manager to add parking slot in the system
 	 */
-	public synchronized void setUpMultiStoreyParking(int noOfSlots) {
+	public  void setUpMultiStoreyParking(int noOfSlots) {
 		ParkingStore.getParkingStoreInstance().setUpMultiStoreyParking(noOfSlots);
 	}
 
 	/**
-	 * issues parking ticket when vehicle enters the parking entrance,making it
-	 * thread safe to handle concurrency
+	 * issues parking ticket when vehicle enters the parking entrance
 	 * 
 	 * @throws Exception
 	 */
-	public synchronized TicketPojo issueParkingTiketAtEntrance(VehiclePojo vehicle) throws Exception {
+	public  ParkingTicket issueParkingTiketAtEntrance(Vehicle vehicle) throws Exception {
 		return ParkingStore.getParkingStoreInstance().getParkingSlot(vehicle);
 
 	}
 
 	/**
-	 * collects parking ticket when vehicle leaves the parking area,making it
-	 * thread safe to handle concurrency
+	 * collects parking ticket when vehicle leaves the parking area,
 	 * 
 	 * @throws Exception
 	 */
-	public synchronized boolean collectParkingTicketAtExit(TicketPojo returnTicket) throws Exception {
+	public  boolean collectParkingTicketAtExit(ParkingTicket returnTicket) throws Exception {
 		return ParkingStore.getParkingStoreInstance().updateReturnTicketToStore(returnTicket);
 	}
 
@@ -100,19 +97,22 @@ public class ParkingManagerService implements ParkingManagerInterface {
 	/**
 	 * get parking details from store
 	 */
-	public ParkingPojo getParkingDetails() {
+	public ParkingLot getParkingDetails() {
 		return ParkingStore.getParkingStoreInstance().getParkingDetails();
 	}
 
 	/**
 	 * get parking status from store
 	 */
-	public List<TicketPojo> getParkingStatus() {
+	public List<ParkingTicket> getParkingStatus() {
 
 		return ParkingStore.getParkingStoreInstance().getParkingStatus();
 	}
 
-	public TicketPojo getTicketInfoBySlot(int slotId) {
+	/**
+	 * get ticket info by slot id.
+	 */
+	public ParkingTicket getTicketInfoBySlot(int slotId) {
 		return ParkingStore.getParkingStoreInstance().getTicketInfoBySlot(slotId);
 	}
 

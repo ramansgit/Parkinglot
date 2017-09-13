@@ -7,7 +7,7 @@ import java.util.List;
  * @author ramans
  *
  */
-public class LevelPojo {
+public class ParkingLevel {
 	
 	public int getAvailableSlotCount() {
 		return availableSlotCount;
@@ -31,7 +31,7 @@ public class LevelPojo {
 	
 	
 	private int levelNo;
-	private List<SlotsPojo> slots;
+	private List<ParkingSlot> slots;
 	
 	private int availableSlotCount;
 
@@ -41,10 +41,10 @@ public class LevelPojo {
 	public void setLevelNo(int levelNo) {
 		this.levelNo = levelNo;
 	}
-	public List<SlotsPojo> getSlots() {
+	public List<ParkingSlot> getSlots() {
 		return slots;
 	}
-	public void setSlots(List<SlotsPojo> slots) {
+	public void setSlots(List<ParkingSlot> slots) {
 		this.slots = slots;
 	}
 	

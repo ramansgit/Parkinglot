@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.parking.exception.ParkingSlotException;
 import com.parking.exception.SearchException;
-import com.parking.model.ParkingPojo;
-import com.parking.model.TicketPojo;
-import com.parking.model.VehiclePojo;
+import com.parking.model.ParkingLot;
+import com.parking.model.ParkingTicket;
+import com.parking.model.Vehicle;
 
 public interface ParkingStoreInterface {
 
@@ -18,12 +18,12 @@ public interface ParkingStoreInterface {
 	/**
 	 * store vehicle info and issue ticket to driver
 	 */
-	public abstract TicketPojo getParkingSlot(VehiclePojo vehicle) throws ParkingSlotException, Exception;
+	public abstract ParkingTicket getParkingSlot(Vehicle vehicle) throws ParkingSlotException, Exception;
 
 	/**
 	 * collect parking ticket from vehicle drive and add to system
 	 */
-	public abstract boolean updateReturnTicketToStore(TicketPojo returnTicket) throws ParkingSlotException, Exception;
+	public abstract boolean updateReturnTicketToStore(ParkingTicket returnTicket) throws ParkingSlotException, Exception;
 
 	/**
 	 * find slot for given registrationNo
@@ -45,13 +45,13 @@ public interface ParkingStoreInterface {
 	 * 
 	 * @return
 	 */
-	public abstract List<TicketPojo> getParkingStatus();
+	public abstract List<ParkingTicket> getParkingStatus();
 
 	/**
 	 * get parking details
 	 * 
 	 * @return
 	 */
-	public abstract ParkingPojo getParkingDetails();
+	public abstract ParkingLot getParkingDetails();
 
 }

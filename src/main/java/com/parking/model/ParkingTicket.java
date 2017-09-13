@@ -5,7 +5,7 @@ package com.parking.model;
  * @author ramans
  *
  */
-public class TicketPojo {
+public class ParkingTicket {
 	
 	@Override
 	public String toString() {
